@@ -1,0 +1,84 @@
+{
+  "name": "@paresh2678/crayon",
+  "version": "0.1.0",
+  "description": "Terminal styling — zero dependencies, OSC 8 hyperlinks, curly underlines, typed themes, full FORCE_COLOR levels.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "tsx bench/bench.ts",
+    "demo": "tsx examples/showcase.ts",
+    "web": "node examples/web/server.mjs",
+    "typecheck": "tsc --noEmit",
+    "size": "node scripts/size.mjs",
+    "check:deps": "node scripts/check-deps.mjs",
+    "check:pack": "publint",
+    "prepublishOnly": "npm run check:deps && npm run typecheck && npm test && npm run build && npm run size && npm run check:pack"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "chalk",
+    "color",
+    "colour",
+    "ansi",
+    "terminal",
+    "cli",
+    "styling",
+    "tty",
+    "hyperlink",
+    "osc8",
+    "theme",
+    "truecolor"
+  ],
+  "license": "MIT",
+  "author": "Paresh Deshpande",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crow2678/crayon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crow2678/crayon/issues"
+  },
+  "homepage": "https://github.com/crow2678/crayon#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "chalk": "^5.6.2",
+    "kleur": "^4.1.5",
+    "picocolors": "^1.1.0",
+    "publint": "^0.3.0",
+    "tinybench": "^2.9.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

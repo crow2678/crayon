@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{TITLE}}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.4.0/css/xterm.min.css"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1117;
+        --panel: #161b22;
+        --border: #30363d;
+        --text: #c9d1d9;
+        --muted: #8b949e;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, sans-serif;
+      }
+      header {
+        padding: 1.25rem 2rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: baseline;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-right: 1rem;
+        font-size: 0.875rem;
+      }
+      nav a:hover { color: var(--text); }
+      main {
+        padding: 1.5rem 2rem 4rem;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 1500px) {
+        main.two { grid-template-columns: 1fr 1fr; }
+      }
+      section.card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-head {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+      }
+      .card-head h2 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .card-head .tagline {
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+      .dot {
+        display: inline-block;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        transform: translateY(-1px);
+      }
+      .stats {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+        background: #0d1117;
+        border-bottom: 1px solid var(--border);
+      }
+      .stats strong { color: var(--text); font-weight: 600; }
+      .term-wrap {
+        padding: 0.5rem;
+        background: #0d1117;
+      }
+      /* xterm cursor — hide for a clean static look */
+      .xterm .xterm-cursor-layer { display: none !important; }
+      .xterm-viewport::-webkit-scrollbar { width: 8px; }
+      .xterm-viewport::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+      }
+      footer {
+        color: var(--muted);
+        font-size: 0.8rem;
+        padding: 1rem 2rem 2rem;
+        text-align: center;
+      }
+      code {
+        background: #0d1117;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.25rem;
+        font-family: ui-monospace, "Cascadia Code", "JetBrains Mono",
+          Menlo, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>{{TITLE}}</h1>
+      <nav>
+        <a href="/">side-by-side</a>
+        <a href="/crayon">crayon</a>
+        <a href="/chalk">chalk</a>
+      </nav>
+    </header>
+
+    <main id="terminals"></main>
+
+    <footer>
+      Rendered via
+      <a href="https://xtermjs.org" style="color: var(--muted)">xterm.js</a>
+      — the same library that powers VS Code's terminal. Each panel above is
+      the raw ANSI stdout from the respective library's showcase, played
+      back faithfully.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.4.0/lib/xterm.min.js"></script>
+    <script>
+      const data = {{TERMINALS_JSON}};
+      const main = document.getElementById('terminals');
+      if (data.length > 1) main.classList.add('two');
+
+      const terminalTheme = {
+        background: '#0d1117',
+        foreground: '#c9d1d9',
+        cursor: '#0d1117',
+        selectionBackground: '#264f78',
+        black: '#484f58',
+        red: '#ff7b72',
+        green: '#7ee787',
+        yellow: '#d29922',
+        blue: '#58a6ff',
+        magenta: '#bc8cff',
+        cyan: '#39c5cf',
+        white: '#c9d1d9',
+        brightBlack: '#6e7681',
+        brightRed: '#ffa198',
+        brightGreen: '#56d364',
+        brightYellow: '#e3b341',
+        brightBlue: '#79c0ff',
+        brightMagenta: '#d2a8ff',
+        brightCyan: '#56d4dd',
+        brightWhite: '#f0f6fc',
+      };
+
+      for (const t of data) {
+        const card = document.createElement('section');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-head">
+            <span class="dot" style="background:${t.accent}"></span>
+            <h2>${t.name}</h2>
+            <span class="tagline">${t.tagline}</span>
+          </div>
+          <div class="stats">${t.stats}</div>
+          <div class="term-wrap"><div class="term"></div></div>
+        `;
+        main.appendChild(card);
+
+        const term = new Terminal({
+          cols: 85,
+          rows: 76,
+          fontFamily:
+            '"Cascadia Code","JetBrains Mono","Fira Code","Menlo","Consolas",ui-monospace,monospace',
+          fontSize: 12,
+          lineHeight: 1.15,
+          theme: terminalTheme,
+          convertEol: true,
+          scrollback: 0,
+          disableStdin: true,
+          cursorBlink: false,
+          cursorStyle: 'underline',
+          allowTransparency: false,
+        });
+        term.open(card.querySelector('.term'));
+        term.write(t.ansi);
+      }
+    </script>
+  </body>
+</html>
