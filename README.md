@@ -116,6 +116,36 @@ Useful for writing styled output to log files, measuring visible string
 length, or string comparisons in tests. Covers CSI, OSC 8 hyperlinks, and
 sub-parameter SGRs (curly underlines).
 
+### Visible length
+
+```js
+import { visibleLength } from '@paresh2678/crayon';
+
+visibleLength('\x1b[31mhi\x1b[39m');     // → 2
+visibleLength('🎨 done');                 // → 6
+```
+
+Code-point count after stripping ANSI. Use it to pad styled strings for
+column alignment. Caveat: doesn't compute terminal-cell width for CJK or
+wide-emoji — for that, reach for `string-width`.
+
+### Themes with a default
+
+```js
+import { theme } from '@paresh2678/crayon';
+
+const log = theme(
+  { info: 'cyan', warn: 'yellow', error: ['red', 'bold'] },
+  { default: 'gray' },
+);
+
+log.error('boom');     // bold red
+log['unknown']('hm');  // gray (fallback)
+```
+
+The default option means dynamic keys (e.g. unknown log levels) get a sane
+styler instead of `undefined`.
+
 ### Color-level detection
 
 ```js

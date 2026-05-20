@@ -3,8 +3,10 @@ export type { ColorLevel, CrayonOptions, StyleFn } from './builder.js';
 export { styled } from './styled.js';
 export { link } from './link.js';
 export { theme } from './theme.js';
+export type { ThemeOptions } from './theme.js';
 export { gradient } from './gradient.js';
 export { stripAnsi } from './strip.js';
+export { visibleLength } from './length.js';
 export { colorLevel, detectColorLevel } from './support.js';
 export {
   rgbToAnsi256,

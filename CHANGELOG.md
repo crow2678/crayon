@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-05-19
+
+### Added
+- **`theme(spec, { default })`** — second-argument options object. When a key
+  isn't in the spec, lookups return the default styler instead of `undefined`.
+  Backed by a Proxy so the lookup is dynamic without changing the visible
+  API surface. Surfaced from the pretty-log dogfood.
+- **`visibleLength(str)`** — count visible code points in a string, ignoring
+  ANSI escape sequences. Useful for padding/aligning styled columns. Caveat:
+  doesn't account for terminal-cell width (CJK / wide glyphs); for that, a
+  width-table library is still needed.
+- Exported type: `ThemeOptions`.
+
+### Notes
+- Both additions are tree-shakable named exports.
+- Bundle stays well under the 4 KB gzip budget.
+
 ## [0.3.0] — 2026-05-19
 
 ### Added

@@ -1,6 +1,6 @@
 {
   "name": "@paresh2678/crayon",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Terminal styling — zero dependencies, OSC 8 hyperlinks, curly underlines, typed themes, full FORCE_COLOR levels.",
   "type": "module",
   "main": "./dist/index.cjs",
