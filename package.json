@@ -66,8 +66,7 @@
   },
   "homepage": "https://github.com/crow2678/crayon#readme",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
