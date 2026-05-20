@@ -4,7 +4,7 @@
 //   FORCE_COLOR=2 npm run demo   (256-color downgrade)
 //   NO_COLOR=1     npm run demo  (no-color fallbacks)
 
-import { c, link, theme, colorLevel } from '../src/index.js';
+import { c, link, theme, gradient, stripAnsi, colorLevel } from '../src/index.js';
 
 const W = 72;
 const HR_DOUBLE = '═'.repeat(W);
@@ -13,20 +13,6 @@ function section(title: string): void {
   const lead = '── ' + title + ' ';
   console.log();
   console.log(c.gray(lead + '─'.repeat(Math.max(0, W - lead.length))));
-}
-
-function hsl(h: number, s: number, l: number): [number, number, number] {
-  s /= 100;
-  l /= 100;
-  const k = (n: number) => (n + h / 30) % 12;
-  const a = s * Math.min(l, 1 - l);
-  const f = (n: number) =>
-    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-  return [
-    Math.round(f(0) * 255),
-    Math.round(f(8) * 255),
-    Math.round(f(4) * 255),
-  ];
 }
 
 // ─────────────────────────────────────────────────────── header ──
@@ -155,14 +141,20 @@ console.log(
     c.underlineDashed('dashed'),
 );
 
-// ────────────────────────────────────── truecolor (60-step hue) ──
-section('Truecolor — 60-step hue rainbow via c.rgb()');
-let rainbow = '  ';
-for (let i = 0; i < 60; i++) {
-  const [r, g, b] = hsl((i / 60) * 360, 75, 55);
-  rainbow += c.rgb(r, g, b)('█');
-}
-console.log(rainbow);
+// ─────────────────────────────────────────── gradient (v0.3) ──
+section('gradient() — per-character RGB interpolation (chalk-less)');
+console.log(
+  '  ' +
+    gradient(['#ff0000', '#ffaa00', '#00ff00', '#00aaff', '#aa00ff', '#ff0044'])(
+      '█'.repeat(60),
+    ),
+);
+console.log(
+  '  ' +
+    gradient(['#ff8800', '#ff0088'])(
+      'crayon — terminal styling done right',
+    ),
+);
 
 // ────────────────────────────────────────── ansi256 color cube ──
 section('256-color cube (6 × 36 = 216 indices)');
@@ -228,6 +220,12 @@ console.log(
     c.gray('raw: ') +
     c.dim(JSON.stringify(nested).replace(/\\u001b/g, 'ESC')),
 );
+
+// ──────────────────────────────────── stripAnsi (v0.3) ──
+section('stripAnsi() — recover plain text from styled output');
+const styled = c.red.bold('error: ') + gradient(['#0f0', '#00f'])('see logs');
+console.log('  styled:   ' + styled);
+console.log('  stripped: ' + JSON.stringify(stripAnsi(styled)));
 
 // ─────────────────────────────────────────── real-world: log lines ──
 section('Real-world: log lines');

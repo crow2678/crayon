@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-05-19
+
+### Added
+- **`gradient()`** — per-character RGB color interpolation. Multi-stop linear
+  gradients. Auto-downgrades through the existing level logic. The chalk-less
+  feature (chalk users reach for `gradient-string`; crayon ships it).
+- **`stripAnsi()`** — strip ANSI escape sequences. Covers CSI, OSC 8
+  (BEL and ST terminators), and SGR sub-parameters (`4:3` curly underline).
+- **Browser / edge-runtime test suite** — backs the "universal" claim with
+  real assertions that the module loads, all APIs degrade to identity
+  functions, and `Crayon({ level: 3 })` still emits codes for consumers
+  rendering ANSI in the browser (xterm.js, ansi-to-html).
+
+### Changed
+- `examples/showcase.ts` swaps the manual HSL rainbow for `gradient()` and
+  adds a stripAnsi demo section.
+
 ## [0.2.0] — 2026-05-19
 
 ### Added

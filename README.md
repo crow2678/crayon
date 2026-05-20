@@ -34,6 +34,8 @@ console.log(t.error('nope'), t.ok('yep'), t.muted('fyi'));
 | Curly / dotted / dashed underlines | ✓ | – |
 | Overline modifier      | ✓ | – |
 | OSC 8 hyperlinks       | ✓ built in | needs `terminal-link` |
+| Gradients              | ✓ `gradient()` | needs `gradient-string` |
+| `stripAnsi()` helper   | ✓ | needs `strip-ansi` |
 | Typed `theme()`        | ✓ | – |
 | `FORCE_COLOR` levels   | 0, 1, 2, 3 | 0 and 3 only ([#624](https://github.com/chalk/chalk/issues/624)) |
 | Pre-built fast path    | `styled(...)` | – |
@@ -88,6 +90,31 @@ const t = theme({
 
 t.error('nope');
 ```
+
+### Gradients
+
+```js
+import { gradient } from '@paresh2678/crayon';
+
+console.log(gradient(['#ff0000', '#00ff00', '#0000ff'])('rainbow text'));
+console.log(gradient(['#ff8800', '#ff0088'])('orange to pink'));
+```
+
+Per-character RGB interpolation across the stops. Auto-downgrades to ansi256
+on level-2 terminals and 16-color on level-1. chalk has no built-in
+equivalent — users reach for `gradient-string`.
+
+### Strip ANSI
+
+```js
+import { stripAnsi } from '@paresh2678/crayon';
+
+stripAnsi('\x1b[31mhi\x1b[39m');  // → 'hi'
+```
+
+Useful for writing styled output to log files, measuring visible string
+length, or string comparisons in tests. Covers CSI, OSC 8 hyperlinks, and
+sub-parameter SGRs (curly underlines).
 
 ### Color-level detection
 
