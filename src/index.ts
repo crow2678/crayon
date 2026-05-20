@@ -1,4 +1,5 @@
-export { c, crayon } from './builder.js';
+export { c, crayon, Crayon } from './builder.js';
+export type { ColorLevel, CrayonOptions, StyleFn } from './builder.js';
 export { styled } from './styled.js';
 export { link } from './link.js';
 export { theme } from './theme.js';

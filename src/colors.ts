@@ -64,36 +64,52 @@ export function ansi256ToRgb(n: number): [number, number, number] {
   ];
 }
 
-export function fgFromRgb(r: number, g: number, b: number): string {
-  if (colorLevel === 0) return '';
+export function fgFromRgb(
+  r: number,
+  g: number,
+  b: number,
+  level: 0 | 1 | 2 | 3 = colorLevel,
+): string {
+  if (level === 0) return '';
   r = clamp(r); g = clamp(g); b = clamp(b);
-  if (colorLevel === 1) return `\x1b[${rgbToAnsi16(r, g, b)}m`;
-  if (colorLevel === 2) return `\x1b[38;5;${rgbToAnsi256(r, g, b)}m`;
+  if (level === 1) return `\x1b[${rgbToAnsi16(r, g, b)}m`;
+  if (level === 2) return `\x1b[38;5;${rgbToAnsi256(r, g, b)}m`;
   return `\x1b[38;2;${r};${g};${b}m`;
 }
 
-export function bgFromRgb(r: number, g: number, b: number): string {
-  if (colorLevel === 0) return '';
+export function bgFromRgb(
+  r: number,
+  g: number,
+  b: number,
+  level: 0 | 1 | 2 | 3 = colorLevel,
+): string {
+  if (level === 0) return '';
   r = clamp(r); g = clamp(g); b = clamp(b);
-  if (colorLevel === 1) return `\x1b[${rgbToAnsi16(r, g, b) + 10}m`;
-  if (colorLevel === 2) return `\x1b[48;5;${rgbToAnsi256(r, g, b)}m`;
+  if (level === 1) return `\x1b[${rgbToAnsi16(r, g, b) + 10}m`;
+  if (level === 2) return `\x1b[48;5;${rgbToAnsi256(r, g, b)}m`;
   return `\x1b[48;2;${r};${g};${b}m`;
 }
 
-export function fgFromAnsi256(n: number): string {
-  if (colorLevel === 0) return '';
+export function fgFromAnsi256(
+  n: number,
+  level: 0 | 1 | 2 | 3 = colorLevel,
+): string {
+  if (level === 0) return '';
   n = clamp(n);
-  if (colorLevel === 1) {
+  if (level === 1) {
     const [r, g, b] = ansi256ToRgb(n);
     return `\x1b[${rgbToAnsi16(r, g, b)}m`;
   }
   return `\x1b[38;5;${n}m`;
 }
 
-export function bgFromAnsi256(n: number): string {
-  if (colorLevel === 0) return '';
+export function bgFromAnsi256(
+  n: number,
+  level: 0 | 1 | 2 | 3 = colorLevel,
+): string {
+  if (level === 0) return '';
   n = clamp(n);
-  if (colorLevel === 1) {
+  if (level === 1) {
     const [r, g, b] = ansi256ToRgb(n);
     return `\x1b[${rgbToAnsi16(r, g, b) + 10}m`;
   }

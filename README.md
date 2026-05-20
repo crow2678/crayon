@@ -98,11 +98,39 @@ import { colorLevel, detectColorLevel } from '@paresh2678/crayon';
 console.log(colorLevel);
 ```
 
+Detection precedence (highest first):
+
+1. `NO_COLOR` env or `--no-color` CLI flag → `0`
+2. `--color[=N]` CLI flag (`16`, `256`, `16m` / `truecolor`)
+3. `FORCE_COLOR` env (`0`, `1`, `2`, `3`)
+4. Terminal-emulator signals: `WT_SESSION` (Windows Terminal), `TERM_PROGRAM=iTerm.app | vscode | ghostty | Apple_Terminal`, `COLORTERM=truecolor`, kitty, Ghostty
+5. CI signals: `GITHUB_ACTIONS` / `GITLAB_CI` / `BUILDKITE` → truecolor; other `CI` → basic
+6. `TERM` heuristics and default
+
+### Per-instance level — `Crayon({ level })`
+
+For dual-output (terminal + log file), forcing a level for testing, or any
+case where the module-wide singleton isn't enough:
+
+```js
+import { Crayon } from '@paresh2678/crayon';
+import fs from 'node:fs';
+
+const colored = Crayon();              // detected level
+const plain   = Crayon({ level: 0 }); // forced no-color
+const cube256 = Crayon({ level: 2 }); // forced 256-color downgrade
+
+console.log(colored.red.bold('error'));                 // bold red on stdout
+fs.writeFileSync('app.log', plain.red.bold('error'));   // plain text in file
+```
+
+Instances are cached per level — calling `Crayon({ level: 2 })` twice returns the same object.
+
 ## Compatibility
 
 | Runtime | Supported |
 |---|---|
-| Node.js | ≥ 20 |
+| Node.js | ≥ 22 |
 | Bun     | latest |
 | Deno    | latest |
 | Browser | yes (no-op when no ANSI) |
@@ -129,7 +157,6 @@ CI enforces a **4 KB gzip budget** for the core bundle.
 - **`colorLevel` is captured once at module load.** Mutating `process.env.NO_COLOR` or `FORCE_COLOR` after `import` has no effect on already-built styled output. Set env vars before launching Node, or call `detectColorLevel()` to re-read.
 - **Bold + dim cannot be cleanly nested.** SGR code `\x1b[22m` closes both bold and dim, so `c.dim('a' + c.bold('b') + 'c')` renders `c` as bold+dim instead of dim only. ANSI limitation; chalk has the same behavior.
 - **`rgbToAnsi16` is an approximation.** Midtone grays (e.g. `rgb(128, 128, 128)`) map to "white" rather than "gray" — the classic 3-bit-RGB algorithm has no dedicated gray slot. For true gray on 16-color terminals, use `c.gray` directly.
-- **Per-instance level override is not supported yet.** Color level is a module-wide singleton. A `Crayon({ level })` factory is planned for v0.2.
 
 ## Visual demos
 

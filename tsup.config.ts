@@ -7,7 +7,7 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
-  target: 'node20',
+  target: 'node22',
   splitting: false,
   sourcemap: false,
 });

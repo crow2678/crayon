@@ -1,6 +1,6 @@
 {
   "name": "@paresh2678/crayon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Terminal styling — zero dependencies, OSC 8 hyperlinks, curly underlines, typed themes, full FORCE_COLOR levels.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -39,7 +39,7 @@
     "prepublishOnly": "npm run check:deps && npm run typecheck && npm test && npm run build && npm run size && npm run check:pack"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "keywords": [
     "chalk",
